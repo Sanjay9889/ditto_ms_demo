@@ -2,6 +2,8 @@ import requests
 from flask import Flask, json, Response
 from flask_caching import Cache
 
+from backend.src.constant import POSTS_URL, COMMENTS_URL, CACHE_TIMEOUT
+
 config = {
     "DEBUG": True,  # some Flask specific configs
     "CACHE_TYPE": "redis",  # Flask-Caching related configs
@@ -13,15 +15,15 @@ cache = Cache(app)
 
 
 @app.route('/comments', methods=['GET'])
-@cache.cached(timeout=60)
+@cache.cached(timeout=CACHE_TIMEOUT)
 def comments():
     try:
         try:
-            posts = requests.get('https://jsonplaceholder.typicode.com/posts')
+            posts = requests.get(POSTS_URL)
         except requests.exceptions.RequestException as e:
             raise e
         try:
-            comments = requests.get('https://jsonplaceholder.typicode.com/comments')
+            comments = requests.get(COMMENTS_URL)
         except requests.exceptions.RequestException as e:
             raise e
 
